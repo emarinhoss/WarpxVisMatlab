@@ -2,13 +2,13 @@ function [output, x, y] = load_data_new(run,run_2,t_step)
 
 temp = hdf5info([run '_' int2str(t_step)]);
 
-name = [temp.GroupHierarchy.Groups(1).Name '/' run_2];
+name = [temp.GroupHierarchy.Groups(2).Name '/' run_2];
 
 output_temp = hdf5read([run '_' int2str(t_step)],name);
 
 dims = size(output_temp);
 
-name_3 = [temp.GroupHierarchy.Groups(1).Name '/grid/'];
+name_3 = [temp.GroupHierarchy.Groups(2).Name '/grid/'];
 
 lower = hdf5read([run '_' int2str(t_step)],[name_3 'vsLowerBounds']);
 upper = hdf5read([run '_' int2str(t_step)],[name_3 'vsUpperBounds']);
