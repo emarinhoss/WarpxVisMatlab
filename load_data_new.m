@@ -10,9 +10,9 @@ dims = size(output_temp);
 
 name_3 = [temp.GroupHierarchy.Groups(2).Name '/grid/'];
 
-lower = hdf5read([run '_' int2str(t_step)],[name_3 'vsLowerBounds']);
-upper = hdf5read([run '_' int2str(t_step)],[name_3 'vsUpperBounds']);
-cells = hdf5read([run '_' int2str(t_step)],[name_3 'vsNumCells']);
+lower = hdf5read([run '_' int2str(t_step)],name_3, 'vsLowerBounds');
+upper = hdf5read([run '_' int2str(t_step)],name_3, 'vsUpperBounds');
+cells = hdf5read([run '_' int2str(t_step)],name_3, 'vsNumCells');
 
 % lower = hdf5read([run '_' int2str(t_step)],[name_3 'lowerBounds']);
 % upper = hdf5read([run '_' int2str(t_step)],[name_3 'upperBounds']);
