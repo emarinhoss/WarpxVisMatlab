@@ -36,11 +36,12 @@ for l in range(0, size(d)):
 	varf  = varf + flux[l,:]*flux[l,:]
 	
 meanf = meanf/size(d)
-varf  = varf/size(d) - meanf
+varf  = varf/size(d) - meanf*meanf
 
 figure(1)
 font = {'fontsize'   : 20}
-plot(T, meanf, '-b')
+#plot(T, meanf, '-b')
+errorbar(T, meanf, varf, ecolor='red')
 xlabel(r'$\omega_{ci}t$',font)
 ylabel('Reconnected flux',font)
 #legend(('TF_128x64_nocor','TF_256x128_nocor','TF_128x64_divBcor','TF_128x64_divcor','TF_512x256_divcor','HallMHD'),2)
