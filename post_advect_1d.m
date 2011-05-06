@@ -15,6 +15,8 @@ count = n(1)./[1 2 4];
 Ymean = zeros(L,frames+1);
 Yvarn = Ymean;
 
+s = 2/pi;
+
 disp('Processing directory:')
 for k=1:n(1)
     
@@ -38,17 +40,17 @@ for k=1:n(1)
             
             for l=0:frames
                 [o0,x] = advection_1d(file0,l);
-                maxP_0 = abs(x(2)-x(1))*sum(o0);
+                maxP_0 = o0(length(x)/2);
                 Ymean(1,l+1) = Ymean(1,l+1) + maxP_0;
                 Yvarn(1,l+1) = Yvarn(1,l+1) + maxP_0*maxP_0;
                 
                 [o1,x] = advection_1d(file1,l);
-                maxP_1 = abs(x(2)-x(1))*sum(o1);
+                maxP_1 = o1(length(x)/2);
                 Ymean(2,l+1) = Ymean(2,l+1) + maxP_1-maxP_0;
                 Yvarn(2,l+1) = Yvarn(2,l+1) + maxP_1*maxP_1;
         
                 [o2,x] = advection_1d(file2,l);
-                maxP_2 = abs(x(2)-x(1))*sum(o2);
+                maxP_2 = o2(length(x)/2);
                 Ymean(3,l+1) = Ymean(3,l+1) + maxP_2-maxP_1;
                 Yvarn(3,l+1) = Yvarn(3,l+1) + maxP_2*maxP_2;
             end
@@ -57,12 +59,12 @@ for k=1:n(1)
             
             for l=0:frames
                 [o0,x] = advection_1d(file0,l);
-                maxP_0 = abs(x(2)-x(1))*sum(o0);
+                maxP_0 = o0(length(x)/2);
                 Ymean(1,l+1) = Ymean(1,l+1) + maxP_0;
                 Yvarn(1,l+1) = Yvarn(1,l+1) + maxP_0*maxP_0;
                 
                 [o1,x] = advection_1d(file1,l);
-                maxP_1 = abs(x(2)-x(1))*sum(o1);
+                maxP_1 = o1(length(x)/2);
                 Ymean(2,l+1) = Ymean(2,l+1) + maxP_1-maxP_0;
                 Yvarn(2,l+1) = Yvarn(2,l+1) + maxP_1*maxP_1;
             end
@@ -70,7 +72,7 @@ for k=1:n(1)
         otherwise
             for l=0:frames
                 [o0,x] = advection_1d(file0,l);
-                maxP_0 = abs(x(2)-x(1))*sum(o0);
+                maxP_0 = o0(length(x)/2);
                 Ymean(1,l+1) = Ymean(1,l+1) + maxP_0;
                 Yvarn(1,l+1) = Yvarn(1,l+1) + maxP_0*maxP_0;
             end
@@ -98,7 +100,7 @@ for k=1:n2(1)
     disp(d2(k).name)
     for l=0:frames
         [o,x] = advection_1d(file,l);
-        maxP = abs(x(2)-x(1))*sum(o);
+        maxP = o(length(x)/2);
         mc_avg(l+1) = mc_avg(l+1) + maxP;
         mc_var(l+1) = mc_var(l+1) + maxP*maxP;
     end
@@ -124,7 +126,7 @@ for k=1:n2(1)
         wgt = fscanf(fid,'%f');
         fclose(fid);
         [o,x] = advection_1d(file,l);
-        maxP = abs(x(2)-x(1))*sum(o);
+        maxP = o(length(x)/2);
         pc_avg(l+1) = pc_avg(l+1) + maxP*wgt;
         pc_std(l+1) = pc_std(l+1) + maxP*maxP*wgt;
     end
@@ -135,16 +137,20 @@ disp(' ')
 disp('Exact')
 file = '/home/sous776/WarpX/cfdlabruns/eder/PNNL/mmc_advect/exact/advect_exact';
 
-T = linspace(0,pi,frames+1); At=T;
+T = linspace(0,pi,frames+1); At=sin(pi/4-1.75*T); A=T;
 for l=0:frames
     [o,x] = advection_1d(file,l);
-    At(l+1) = abs(x(2)-x(1))*sum(o);
+    A(l+1) = o(length(x)/2);
 end
 
-errorbar(T,mc_avg,sqrt(mc_var),'b'), hold on
-errorbar(T,avg,sqrt(var),'r')
-errorbar(T,pc_avg,pc_std,'k')
-plot(T,At,'g')
-legend('MC','MMC','PCM','Exact')
-ylabel('Area')
+figure(1), plot(T,mc_avg,'r',T,avg,'b',T,pc_avg,'g',T,At,'--m')
+legend('MC','MMC','PCM','Exact for mean c','Numerical for mean c')
+ylabel('mean q value at x=0')
 xlabel('Time')
+title('MEAN')
+
+figure(2), plot(T,mc_var,'r',T,var,'b',T,pc_std.*pc_std,'g')
+legend('MC','MMC','PCM')
+ylabel('variance of q value at x=0')
+xlabel('Time')
+title('VARIANCE')

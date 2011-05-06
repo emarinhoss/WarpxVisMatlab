@@ -1,11 +1,8 @@
 clear all; clc; close all;
 
-%color = ['r','b','k','g','c','y','m','o','s'];
-
-%fileloc = '/home/sous776/WarpX/cfdlabruns/eder/PNNL/NERCS_RUNS/';
-fileloc = '/home/sousae/scratch/';
+fileloc = '/home/sous776/scratch/';
 d = dir([fileloc 'recon_005*']);
-n = size(d); num = 150;
+n = size(d); num = n(1);
 
 frames = 40;
 flux = zeros(num,frames+1);
@@ -20,7 +17,7 @@ for m=1:num
         dx = abs(x(2)-x(1)); mid=ceil(0.5*length(y));
         flux(m,k+1) = dx * sum(abs(output(mid,:,15)));
     end
-    Ly = 25.6;
+    Ly = 12.8;
     flux(m,:) = flux(m,:)/(2*Ly);
     flux(m,:) = 0.2*flux(m,:)/flux(m,1);
 end
@@ -30,7 +27,7 @@ varf = sum(flux.*flux)/num - meanf;
 stdf = sqrt(abs(varf));
 
 errorbar(0:40,meanf,varf), hold on;
-plot(0:40,flux(1,:),'--g',0:40,flux(num,:),'--r')
+%plot(0:40,flux(1,:),'--g',0:40,flux(num,:),'--r')
 title('Magnetic Reconnection Flux ')
 ylabel('Flux')
 xlabel('Time')

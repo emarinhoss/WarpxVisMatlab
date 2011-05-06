@@ -2,8 +2,7 @@ import glob
 import numpy
 import os
 import wxdata as wxdata2
-from pylab import *
-from numpy import *
+import pylab
 
 frames = 10
 d = glob.glob("/home/sousae/UQ_PNNL/recon_MR*")
