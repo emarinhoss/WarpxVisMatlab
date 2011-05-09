@@ -1,19 +1,21 @@
+clear all; close all; clc;
+
 %% Multilevel Monte Carlo
 disp('Multilevel Monte Carlo')
 L = 3;
 frames = 40;
 
 
-folder = '/home/sous776/scratch/mmc_recon/';
+folder = '/home/sousae/scratch/';
 d = dir([folder 'recon_006*']);
 n = size(d);
 
 % allocate
 s = 0.2/(2*12.8);   %sclaling
-count = n(1)./[1 2 4];
-flux0 = zeros(count(1),frames+1);
-flux1 = zeros(count(2),frames+1);
-flux2 = zeros(count(3),frames+1);
+count = zeros(1,3); s0=0; s1=0; s2=0;
+flux0 = zeros(n(1),frames+1);
+flux1 = zeros(n(1),frames+1);
+flux2 = zeros(n(1),frames+1);
 Ymean = zeros(L,frames+1);
 Yvarn = Ymean;
 
@@ -29,10 +31,13 @@ for k=1:n(1)
     if (exist([folder d(k).name '/ssrecon_wv_2.pin'],'file') && ...
             exist([folder d(k).name '/ssrecon_wv_1.pin'],'file'))
         level = 2;
+        s2 = s2 + 1;
     elseif (exist([folder d(k).name '/ssrecon_wv_1.pin'],'file'))
         level = 1;
+        s1 = s1 + 1;
     else
         level = 0;
+        s0 = s0 + 1;
     end
     
     switch level
@@ -87,6 +92,10 @@ for k=1:n(1)
     end
 end
 
+count(1) = s1+s2+s0;
+count(2) = s1+s2;
+count(3) = s2;
+
 avg = zeros(1,frames+1); var=avg;
 for m=1:L
     avg1 = Ymean(m,:)/count(m);
@@ -94,5 +103,5 @@ for m=1:L
     
     avg = avg + avg1;
 end
-
+T = linspace(0,pi,frames+1);
 errorbar(T,avg,sqrt(var),'r')

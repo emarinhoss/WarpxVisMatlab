@@ -2,17 +2,19 @@ import glob
 import numpy
 import os
 import wxdata as wxdata2
-import pylab
+from pylab import *
+from numpy import *
 
-frames = 10
-d = glob.glob("/home/sousae/UQ_PNNL/recon_MR*")
+frames = 40
+d = glob.glob("/home/sousae/scratch/mmc_recon/recon_007*")
 
-flux  = numpy.zeros((size(d),frames+1), numpy.float)
+flux  = numpy.zeros((len(d),frames+1), numpy.float)
 meanf = numpy.zeros(frames+1, numpy.float)
 varf  = numpy.zeros(frames+1, numpy.float)
 
-for m in range(0,size(d)):
+for m in range(0,len(d)):
 	filename = os.path.join(d[m], "ssrecon_wv")
+	print filename, m
 	for n in range(0,frames+1):
 		dh = wxdata2.WxData(filename, n)
 		q = dh.read('qnew')
@@ -25,12 +27,12 @@ for m in range(0,size(d)):
 		dh.close()
 		
 Ly = 12.8
-wce = 0.1
-T = linspace(0.0, frames*2.0*wce, frames+1)
+wci = 0.1
+T = linspace(0.0, frames*2.0*wci, frames+1)
 flux = flux/(2*Ly)
 
 for l in range(0, size(d)):
-	flux[l,:] = 2*wce*flux[l,:]/flux[l,0] # rescale to match GEM conditions
+	flux[l,:] = 2*wci*flux[l,:]/flux[l,0] # rescale to match GEM conditions
 	meanf = meanf + flux[l,:]
 	varf  = varf + flux[l,:]*flux[l,:]
 	

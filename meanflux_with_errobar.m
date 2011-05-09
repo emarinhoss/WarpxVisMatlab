@@ -1,7 +1,7 @@
 clear all; clc; close all;
 
-fileloc = '/home/sous776/scratch/';
-d = dir([fileloc 'recon_005*']);
+fileloc = '/home/sousae/scratch/mmc_recon/';
+d = dir([fileloc 'recon_007*']);
 n = size(d); num = n(1);
 
 frames = 40;
@@ -23,10 +23,10 @@ for m=1:num
 end
 
 meanf = sum(flux)/num;
-varf = sum(flux.*flux)/num - meanf;
+varf = sum(flux.*flux)/num - meanf.*meanf;
 stdf = sqrt(abs(varf));
 
-errorbar(0:40,meanf,varf), hold on;
+errorbar(0.1*(0:40),meanf,varf), hold on;
 %plot(0:40,flux(1,:),'--g',0:40,flux(num,:),'--r')
 title('Magnetic Reconnection Flux ')
 ylabel('Flux')
