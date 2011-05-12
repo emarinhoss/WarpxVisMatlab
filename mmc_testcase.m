@@ -143,7 +143,7 @@ end
  disp(' ')
  disp('Exact')
 
-T = linspace(0,1,cells); A=zeros(1,cells);
+T = linspace(0,1,cells); A=zeros(1,cells); B=A;
 
 fid = fopen([folder 'mmc_values.txt'],'r');
 mmc_vals = fscanf(fid,'%f');
@@ -153,28 +153,36 @@ fid = fopen([folder 'mc_values.txt'],'r');
 mc_vals = fscanf(fid,'%f');
 fclose(fid);mcval = mean(mc_vals);
 
-u0 = 1.0e-8;
 cs = sqrt(1.4);
 wc = 10;
 for l=0:9
     kn = 2*pi*(2*l+1);
     wn = sqrt(kn*kn*cs*cs+wc*wc);
-    A = A - u0/(2*l+1)*sin(kn*T+wn*10.0);
+    A = A - mmcval/(2*l+1)*sin(kn*T+wn*10.0);
+    B = B - mcval/(2*l+1)*sin(kn*T+wn*10.0);
 end
 
-figure(1), plot(T,mc_avg,'r',T,avg,'b',T,pc_avg,'g',T,A,'k')
-legend('MC','MMC','PCM','Exact')
+figure(1), p1=plot(T,mc_avg,'r',T,avg,'c',T,pc_avg,'--g',T,A,'--k');
+legend('MC','MMC','PCM','Exact using MMC mean')
 ylabel('u_x')
 xlabel('Time')
 title('MEAN')
+set(p1,'LineWidth',2)
 
-figure(2), plot(T,mc_var,'r',T,var,'b',T,pc_var,'g')
+
+figure(2), p2=plot(T,mc_var,'r',T,var,'c',T,pc_var,'g');
 legend('MC','MMC','PCM')
 ylabel('\sigma^2')
 xlabel('Time')
 title('VARIANCE')
+set(p2,'LineWidth',2)
 
-% figure(3), errorbar(T,mc_avg,mc_var,'r'), hold on
-% errorbar(T,pc_avg,pc_var,'g')
-% errorbar(T,avg,var,'b')
-% plot(T,A,'k')
+
+
+figure(3),p3=plot(T,A-avg,'c',T,B-mc_avg,'r');
+legend('MMC error','MC error')
+ylabel('Error')
+xlabel('X')
+set(p3,'LineWidth',2)
+
+%title('VARIANCE')
