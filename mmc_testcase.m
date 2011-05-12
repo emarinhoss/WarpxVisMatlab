@@ -165,21 +165,18 @@ end
 figure(1), p1=plot(T,mc_avg,'r',T,avg,'c',T,pc_avg,'--g',T,A,'--k');
 legend('MC','MMC','PCM','Exact using MMC mean')
 ylabel('u_x')
-xlabel('Time')
+xlabel('X')
 title('MEAN')
 set(p1,'LineWidth',2)
-
 
 figure(2), p2=plot(T,mc_var,'r',T,var,'c',T,pc_var,'g');
 legend('MC','MMC','PCM')
 ylabel('\sigma^2')
-xlabel('Time')
+xlabel('X')
 title('VARIANCE')
 set(p2,'LineWidth',2)
 
-
-
-figure(3),p3=plot(T,A-avg,'c',T,B-mc_avg,'r');
+figure(3),p3=plot(T,abs((A-avg)./A),'c',T,abs((B-mc_avg)./B),'r');
 legend('MMC error','MC error')
 ylabel('Error')
 xlabel('X')
