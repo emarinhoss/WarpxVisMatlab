@@ -1,7 +1,7 @@
-function [output,x] = advection_1d(filename,outnum)
+function [output,x] = advection_1d(filename,nam,outnum)
 
 temp = hdf5info([filename '_' int2str(outnum)]);
-name = temp.GroupHierarchy.Groups(1).Datasets(1).Name;
+name = [temp.GroupHierarchy.Groups(1).Name '/' nam];
 
 output = hdf5read([filename '_' int2str(outnum)],name);
 
